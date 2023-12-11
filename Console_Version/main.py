@@ -1,3 +1,5 @@
+from itertools import combinations
+
 height = 7
 width = 7
 
@@ -217,6 +219,12 @@ def generateStates(n):
     return states
 
 
+def generate_states_with_sum(count, sum_of_numbers):
+    numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    result = [comb for comb in combinations(numbers, count) if sum(comb) == sum_of_numbers]
+    return result
+
+
 def solveProblem(x, y):
     if y == height - 1:
         if x == width - 2:
@@ -252,10 +260,26 @@ def solveProblem2(listOfGuide, numberOfGuide):
     return False
 
 
+def solveProblem3(listOfGuide, numberOfGuide):
+    if len(listOfGuide) == numberOfGuide:
+        # return board
+        return True
+
+    for i in generate_states_with_sum(listOfGuide[numberOfGuide].countOfCells, listOfGuide[numberOfGuide].guideNumber):
+        for j in range(listOfGuide[numberOfGuide].countOfCells):
+            board[listOfGuide[numberOfGuide].emptyCells[j][0]][listOfGuide[numberOfGuide].emptyCells[j][1]] = i[j]
+            listOfGuide[numberOfGuide].emptyCells[j][2] = i[j]
+        if checkGuid(listOfGuide[numberOfGuide]):
+            solveProblem2(listOfGuide, numberOfGuide + 1)
+            return True
+
+    return False
+
+
 printBoard(board, width, height)
 
 guideList = findGuide(board, width, height)
-solveProblem2(guideList, 0)
+solveProblem3(guideList, 0)
 printBoard(board, width, height)
 
 
