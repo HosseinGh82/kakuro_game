@@ -13,12 +13,12 @@ board = [[-2, -2, -2, -2, -2, -2, -2],
 
 # height = 5
 # width = 5
-# board2 = [[-2, -2, -2, -2, -2],
+# board = [[-2, -2, -2, -2, -2],
 #           [-2, -1, [3, 2], 2, -2],
 #           [-2, [-1, 4], 1, 3, -2],
 #           [-2, -1, 2, -1, -2],
 #           [-2, -2, -2, -2, -2]]
-#
+
 # board = [[-2, -2, -2, -2, -2],
 #          [-2, -1, [3, 2], 0, -2],
 #          [-2, [-1, 4], 0, 0, -2],
@@ -161,7 +161,13 @@ def validNumber(x, y, number):
     return True
 
 
-# def checkGuid(guide):
+def checkGuid(guide):
+    sum = 0
+    for cell in guide.emptyCells:
+        sum += cell[2]
+    if sum != guide.guideNumber:
+        return False
+    return True
 
 
 def checkTable():
@@ -198,6 +204,19 @@ def checkTable():
     return True
 
 
+def generateStates(n):
+    if n <= 0:
+        return [[]]
+    smaller_states = generateStates(n - 1)
+    states = []
+    for state in smaller_states:
+        for num in range(1, 10):
+            if num not in state:
+                new_state = state + [num]
+                states.append(new_state)
+    return states
+
+
 def solveProblem(x, y):
     if y == height - 1:
         if x == width - 2:
@@ -217,13 +236,40 @@ def solveProblem(x, y):
     return False
 
 
-printBoard(board, width, height)
-print()
-guideList = findGuide(board, width, height)
+def solveProblem2(listOfGuide, numberOfGuide):
+    if len(listOfGuide) == numberOfGuide:
+        # return board
+        return True
 
-print(guideList)
-solveProblem(1, 1)
+    for i in generateStates(listOfGuide[numberOfGuide].countOfCells):
+        for j in range(listOfGuide[numberOfGuide].countOfCells):
+            board[listOfGuide[numberOfGuide].emptyCells[j][0]][listOfGuide[numberOfGuide].emptyCells[j][1]] = i[j]
+            listOfGuide[numberOfGuide].emptyCells[j][2] = i[j]
+        if checkGuid(listOfGuide[numberOfGuide]):
+            solveProblem2(listOfGuide, numberOfGuide + 1)
+            return True
+
+    return False
+
+
 printBoard(board, width, height)
+
+guideList = findGuide(board, width, height)
+solveProblem2(guideList, 0)
+printBoard(board, width, height)
+
+
+# for i in guideList:
+#     i.printGuideInfo()
+
+# print(result)
+# printBoard(result, width, height)
+
+# printBoard(board, width, height)
+
+
+# solveProblem(1, 1)
+# printBoard(board, width, height)
 
 
 # def convertToList(lg):
