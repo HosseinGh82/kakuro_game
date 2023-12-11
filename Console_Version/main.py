@@ -26,6 +26,55 @@ board = [[-2, -2, -2, -2, -2, -2, -2],
 #          [-2, -2, -2, -2, -2]]
 
 
+class Guide:
+    def __init__(self, cells, guideNum, cCells):
+        self.emptyCells = cells
+        self.guideNumber = guideNum
+        self.countOfCells = cCells
+
+    def printGuideInfo(self):
+        print("cells: ", end="")
+        for i in self.emptyCells:
+            print(f"({i[0]}, {i[1]}, {i[2]})", end=", ")
+        print()
+        print("count of cells =", self.countOfCells)
+        print("Guide number", self.guideNumber)
+        print()
+
+
+def findGuide(b, w, h):
+    guideList = []
+    # For row guide:
+    for i in range(w):
+        for j in range(h):
+            if type(b[i][j]) == list:
+                if b[i][j][1] != -1:
+                    num = b[i][j][1]
+                    j2 = j + 1
+                    cellList = []
+                    while (j2 < w) and not (isEnd(i, j2)):
+                        cellList.append([i, j2, board[i][j2]])
+                        j2 += 1
+                    guide = Guide(cellList, num, len(cellList))
+                    guideList.append(guide)
+
+    # For column guide:
+    for i in range(h):
+        for j in range(w):
+            if type(b[i][j]) == list:
+                if b[i][j][0] != -1:
+                    num = b[i][j][0]
+                    i2 = i + 1
+                    cellList = []
+                    while (j2 < h) and not (isEnd(i2, j)):
+                        cellList.append([i2, j, board[i2][j]])
+                        i2 += 1
+                    guide = Guide(cellList, num, len(cellList))
+                    guideList.append(guide)
+
+    return guideList
+
+
 def printCell(cell):
     string1 = ""
     string2 = ""
@@ -170,5 +219,21 @@ def solveProblem(x, y):
 
 printBoard(board, width, height)
 print()
+guideList = findGuide(board, width, height)
+
+print(guideList)
 solveProblem(1, 1)
 printBoard(board, width, height)
+
+
+# def convertToList(lg):
+#     listOfAll = []
+#
+#     for i in lg:
+#         for j in range(i.countOfCells):
+#             listOfAll.append(i.emptyCells[j])
+#         listOfAll.append(i.guideNumber)
+#
+#     return listOfAll
+
+# def printListOfAll(l):
