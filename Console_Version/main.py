@@ -12,6 +12,63 @@ import types
 #          [-2, -2, -2, -2, -2, -2, -2]
 #          ]
 
+class Game:
+    def __init__(self, b, w, h):
+        self.board = b
+        self.width = w
+        self.height = h
+
+    def isEnd(self, x, y):
+        if type(self.board[x][y]) == list:
+            return True
+        if self.board[x][y] < 0:
+            return True
+        return False
+
+    def findGuide(self):
+        guideList = []
+        # For row guide:
+        for i in range(self.width):
+            for j in range(self.height):
+                if type(self.board[i][j]) == list:
+                    if self.board[i][j][1] != -1:
+                        num = self.board[i][j][1]
+                        j2 = j + 1
+                        cellList = []
+                        while (j2 < self.width) and not (self.isEnd(i, j2)):
+                            # print(self.board[i][j2])
+                            cellList.append([i, j2, self.board[i][j2]])
+                            j2 += 1
+                        guide = Guide(cellList, num, len(cellList))
+                        guideList.append(guide)
+
+        # For column guide:
+        for i in range(self.height):
+            for j in range(self.width):
+                if type(self.board[i][j]) == list:
+                    if self.board[i][j][0] != -1:
+                        num = self.board[i][j][0]
+                        i2 = i + 1
+                        cellList = []
+                        while (j2 < self.height) and not (self.isEnd(i2, j)):
+                            cellList.append([i2, j, self.board[i2][j]])
+                            i2 += 1
+                        guide = Guide(cellList, num, len(cellList))
+                        guideList.append(guide)
+
+        return guideList
+
+    def convertToList(lg): # lg = list guide
+        listOfAll = []
+
+        for i in lg:
+            for j in range(i.countOfCells):
+                listOfAll.append(i.emptyCells[j])
+            listOfAll.append(i.guideNumber)
+
+        return listOfAll
+
+
 
 height = 5
 width = 5
@@ -28,57 +85,57 @@ board = [[-2, -2, -2, -2, -2],
          [-2, -1, 0, -1, -2],
          [-2, -2, -2, -2, -2]]
 
-def isEnd(b, x, y):
-    if type(b[x][y]) == list:
-        return True
-    if b[x][y] < 0:
-        return True
-    return False
+# def isEnd(b, x, y):
+#     if type(b[x][y]) == list:
+#         return True
+#     if b[x][y] < 0:
+#         return True
+#     return False
 
 
-def findGuide(b, w, h):
-    guideList = []
-    # For row guide:
-    for i in range(w):
-        for j in range(h):
-            if type(b[i][j]) == list:
-                if b[i][j][1] != -1:
-                    num = b[i][j][1]
-                    j2 = j + 1
-                    cellList = []
-                    while (j2 < w) and not (isEnd(b, i, j2)):
-                        print(board[i][j2])
-                        cellList.append([i, j2, board[i][j2]])
-                        j2 += 1
-                    guide = Guide(cellList, num, len(cellList))
-                    guideList.append(guide)
+# def findGuide(b, w, h):
+#     guideList = []
+#     # For row guide:
+#     for i in range(w):
+#         for j in range(h):
+#             if type(b[i][j]) == list:
+#                 if b[i][j][1] != -1:
+#                     num = b[i][j][1]
+#                     j2 = j + 1
+#                     cellList = []
+#                     while (j2 < w) and not (isEnd(b, i, j2)):
+#                         print(board[i][j2])
+#                         cellList.append([i, j2, board[i][j2]])
+#                         j2 += 1
+#                     guide = Guide(cellList, num, len(cellList))
+#                     guideList.append(guide)
+#
+#     # For column guide:
+#     for i in range(h):
+#         for j in range(w):
+#             if type(b[i][j]) == list:
+#                 if b[i][j][0] != -1:
+#                     num = b[i][j][0]
+#                     i2 = i + 1
+#                     cellList = []
+#                     while (j2 < h) and not (isEnd(b, i2, j)):
+#                         cellList.append([i2, j, board[i2][j]])
+#                         i2 += 1
+#                     guide = Guide(cellList, num, len(cellList))
+#                     guideList.append(guide)
+#
+#     return guideList
 
-    # For column guide:
-    for i in range(h):
-        for j in range(w):
-            if type(b[i][j]) == list:
-                if b[i][j][0] != -1:
-                    num = b[i][j][0]
-                    i2 = i + 1
-                    cellList = []
-                    while (j2 < h) and not (isEnd(b, i2, j)):
-                        cellList.append([i2, j, board[i2][j]])
-                        i2 += 1
-                    guide = Guide(cellList, num, len(cellList))
-                    guideList.append(guide)
 
-    return guideList
-
-
-def convertToList(lg):
-    listOfAll = []
-
-    for i in lg:
-        for j in range(i.countOfCells):
-            listOfAll.append(i.emptyCells[j])
-        listOfAll.append(i.guideNumber)
-
-    return listOfAll
+# def convertToList(lg):
+#     listOfAll = []
+#
+#     for i in lg:
+#         for j in range(i.countOfCells):
+#             listOfAll.append(i.emptyCells[j])
+#         listOfAll.append(i.guideNumber)
+#
+#     return listOfAll
 
 
 # def printListOfAll(l):
